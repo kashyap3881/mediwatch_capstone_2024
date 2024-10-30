@@ -7,6 +7,10 @@ st.title("MediWatch Readmission Minder")
 
 st.subheader("the way to anticipate readmissions")
 
+# Function to determine readmission risk (placeholder logic)
+def predict_readmission(row):
+    return bool(random.getrandbits(1))
+
 uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 if uploaded_file is not None:
     # Read the CSV file into a DataFrame
@@ -19,9 +23,7 @@ if uploaded_file is not None:
     st.write("Random sample of 5 rows:")
     st.write(patient_sample)
 
-    # Function to determine readmission risk (placeholder logic)
-    def predict_readmission(row):
-        return bool(random.getrandbits(1))
+    
     
     # Add prediction column to the beginning of the DataFrame
     patient_sample.insert(0, 'Readmission_Risk', patient_sample.apply(predict_readmission, axis=1))
