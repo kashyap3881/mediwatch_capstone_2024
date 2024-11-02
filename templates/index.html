@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Patient Hospital Readmission Predictor</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 1200px; }
+        #csvPreviewTable {
+            width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            display: block;
+            margin-top: 20px;
+        }
+        #csvPreviewTable table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #csvPreviewTable th, #csvPreviewTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #csvPreviewTable th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        #chartContainer { height: 400px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Diabetes Patient Hospital Readmission Predictor</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="csvFile">Upload CSV File:</label>
+                    <input type="file" class="form-control-file" id="csvFile" accept=".csv">
+                </div>
+                <button id="predictBtn" class="btn btn-primary">Predict</button>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>CSV Preview</h3>
+                <div id="csvPreviewTable"></div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h3>Prediction Results</h3>
+            <div id="chartContainer">
+                <canvas id="predictionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let fileContent = '';
+            let chart = null;
+
+            function createTableFromCSV(csv) {
+                const rows = csv.split('\n');
+                const headers = rows[0].split(',');
+                let tableHtml = '<table><thead><tr>';
+                
+                headers.forEach(header => {
+                    tableHtml += `<th>${header}</th>`;
+                });
+                
+                tableHtml += '</tr></thead><tbody>';
+                
+                for (let i = 1; i < Math.min(rows.length, 100); i++) {
+                    const cells = rows[i].split(',');
+                    tableHtml += '<tr>';
+                    cells.forEach(cell => {
+                        tableHtml += `<td>${cell}</td>`;
+                    });
+                    tableHtml += '</tr>';
+                }
+                
+                tableHtml += '</tbody></table>';
+                return tableHtml;
+            }
+
+            $('#csvFile').change(function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fileContent = e.target.result;
+                    const tableHtml = createTableFromCSV(fileContent);
+                    $('#csvPreviewTable').html(tableHtml);
+                };
+                reader.readAsText(file);
+            });
+
+            $('#predictBtn').click(function() {
+                if (!fileContent) {
+                    alert('Please upload a CSV file first.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/predict',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({csv: btoa(fileContent)}),
+                    success: function(response) {
+                        const data = response["Hospital Readmission Prediction"];
+                        const times = data.map(item => item.patient_id);
+                        const threads = data.map(item => item.readmitted);
+                        const predictedThreads = data.map(item => item.predicted_readmitted);
+
+                        if (chart) {
+                            chart.destroy();
+                        }
+
+                        chart = new Chart($('#predictionChart'), {
+                            type: 'line',
+                            data: {
+                                labels: times,
+                                datasets: [{
+                                    label: 'Actual Readmission Status',
+                                    data: threads,
+                                    borderColor: 'blue',
+                                    fill: false
+                                }, {
+                                    label: 'Predicted Readmission Status',
+                                    data: predictedThreads,
+                                    borderColor: 'red',
+                                    fill: false
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                title: {
+                                    display: true,
+                                    text: 'Actual vs Predicted Readmission Status'
+                                },
+                                scales: {
+                                    x: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Patient Number'
+                                        }
+                                    },
+                                    y: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Readmission Status'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error(textStatus, errorThrown);
+                        alert('Prediction failed. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
