@@ -21,17 +21,6 @@ class clean:
     def drop_feature(self, feature_arr=[]):
         self.df = self.df.drop(feature_arr, axis=1)
     
-    def drop_missing(self):
-        drop_Idx = set(self.df[(self.df['diag_1'] == '?') & (self.df['diag_2'] == '?') & (self.df['diag_3'] == '?')].index)
-        drop_Idx = drop_Idx.union(set(self.df['diag_1'][self.df['diag_1'] == '?'].index))
-        drop_Idx = drop_Idx.union(set(self.df['diag_2'][self.df['diag_2'] == '?'].index))
-        drop_Idx = drop_Idx.union(set(self.df['diag_3'][self.df['diag_3'] == '?'].index))
-        drop_Idx = drop_Idx.union(set(self.df['race'][self.df['race'] == '?'].index))
-        drop_Idx = drop_Idx.union(set(self.df[self.df['discharge_disposition_id'] == 11].index))
-        drop_Idx = drop_Idx.union(set(self.df['gender'][self.df['gender'] == 'Unknown/Invalid'].index))
-        new_Idx = list(set(self.df.index) - set(drop_Idx))
-        self.df = self.df.iloc[new_Idx]
-    
     def collapse_readmitted(self):
         # New target variable mapping to collapse into a binary classification and plotting distribution
         self.df = self.df.replace({"NO":0,

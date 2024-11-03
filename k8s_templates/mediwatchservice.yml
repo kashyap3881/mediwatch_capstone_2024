@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mediwatch-service
+spec:
+  selector:
+    app: mediwatch
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9003
+      nodePort: 30085
+  type: NodePort
