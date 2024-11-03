@@ -22,15 +22,19 @@ class DiabetesReadmissionPredictor:
         logger.info("Invoking cleaning module to clean new data ..........")
         cleanObj = clean(self.filename)
         clean_df = cleanObj.clean_data()
+
+        # This is non-scaled data so we need to apply scaler here before we do predictions
         
         logger.info("Loading the best model ..........")
         loaded_model = joblib.load(os.path.join(self.model_dir, 'best_model.joblib'))
+        loaded_scaler = joblib.load(os.path.join(self.model_dir, 'best_scaler.joblib'))
 
         y_actual = clean_df['readmitted']
         X_new = clean_df.drop('readmitted', axis=1)
+        X_new_scaled = loaded_scaler.transform(X_new)
 
         # Predicting the patient readmission
-        y_pred = loaded_model.predict(X_new)
+        y_pred = loaded_model.predict(X_new_scaled)
 
         # Creating the result DataFrame
         result_df = pd.DataFrame({
