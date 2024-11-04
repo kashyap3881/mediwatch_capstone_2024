@@ -17,7 +17,7 @@ def get_rows_columns_dtypes(data):
     logger.info('#features (columns) =  {}'.format(cols))
     
     # Print the data types dtypes
-    logger.info("\nData types:\n", data.dtypes)
+    logger.info(f"\nData types:\n {data.dtypes}")
 
 #Checking for missing values in dataset
 #In the dataset missing values are represented as '?' sign
