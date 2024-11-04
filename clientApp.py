@@ -3,6 +3,7 @@ import os
 from flask_cors import CORS, cross_origin
 from src.lib.utils import decodeCSV
 from src.model_inference.predict import DiabetesReadmissionPredictor
+from src.model_training.train import DiabetesReadmissionTrainer
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -18,8 +19,11 @@ CORS(app)
 #@cross_origin()
 class ClientApp:
     def __init__(self):
-        self.filename = "test_prod__hlrLogLocationUpdateOTA__.csv"
-        self.qpredictor = DiabetesReadmissionPredictor(self.filename, os.path.join(os.getcwd(), "src/models/best_model"))
+        self.filename = "test_data.csv"
+        self.predictor = DiabetesReadmissionPredictor(self.filename, os.path.join(os.getcwd(), "src/models/best_model"))
+        self.trainer = DiabetesReadmissionTrainer(os.path.join(os.getcwd(), "src/input_data/dataset_diabetes/diabetic_data.csv"), 
+                                                  self.filename, 
+                                                  os.path.join(os.getcwd(), "src/models"))
 
 @app.route("/", methods=['GET'])
 @cross_origin()
@@ -33,10 +37,29 @@ def predictRoute():
     csv_data = request.json['csv']
     client_app = ClientApp()
     decodeCSV(csv_data, client_app.filename)
-    result = client_app.qpredictor.prediction_diabetes_readmission()
+    result = client_app.predictor.prediction_diabetes_readmission()
     # Ensure the result is in the correct format
     formatted_result = {
         "Hospital Readmission Prediction": result[0]["Hospital Readmission Prediction"]
+    }
+    return jsonify(formatted_result)
+
+
+@app.route("/train", methods=['POST'])
+@cross_origin()
+def trainRoute():
+    csv_data = request.json['csv']
+    client_app = ClientApp()
+    decodeCSV(csv_data, client_app.filename)
+    result = client_app.trainer.train_and_evaluate_model()
+    # Ensure the result is in the correct format
+    # Format the result
+    formatted_result = {
+        "Hospital Readmission Training": {
+            "Best Model": result['best_model_name'],
+            "Train Accuracy": result['best_model_train_accuracy'],
+            "Test Accuracy": result['best_model_test_accuracy']
+        }
     }
     return jsonify(formatted_result)
 

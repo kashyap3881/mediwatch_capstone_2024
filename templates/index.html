@@ -31,6 +31,12 @@
             top: 0;
         }
         #chartContainer { height: 400px; margin-top: 20px; }
+        #trainingResultBox {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
@@ -42,7 +48,8 @@
                     <label for="csvFile">Upload CSV File:</label>
                     <input type="file" class="form-control-file" id="csvFile" accept=".csv">
                 </div>
-                <button id="predictBtn" class="btn btn-primary">Predict</button>
+                <button id="predictBtn" class="btn btn-primary mr-2">Predict</button>
+                <button id="trainBtn" class="btn btn-success">Train</button>
             </div>
         </div>
         <div class="row mt-4">
@@ -56,6 +63,10 @@
             <div id="chartContainer">
                 <canvas id="predictionChart"></canvas>
             </div>
+        </div>
+        <div class="mt-4">
+            <h3>Training Results</h3>
+            <div id="trainingResultBox"></div>
         </div>
     </div>
 
@@ -165,6 +176,33 @@
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.error(textStatus, errorThrown);
                         alert('Prediction failed. Please try again.');
+                    }
+                });
+            });
+
+            $('#trainBtn').click(function() {
+                if (!fileContent) {
+                    alert('Please upload a CSV file first.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/train',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({csv: btoa(fileContent)}),
+                    success: function(response) {
+                        const trainingResult = response["Hospital Readmission Training"];
+                        const resultHtml = `
+                            <p><strong>Best Model:</strong> ${trainingResult["Best Model"]}</p>
+                            <p><strong>Train Accuracy:</strong> ${trainingResult["Train Accuracy"].toFixed(4)}</p>
+                            <p><strong>Test Accuracy:</strong> ${trainingResult["Test Accuracy"].toFixed(4)}</p>
+                        `;
+                        $('#trainingResultBox').html(resultHtml);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error(textStatus, errorThrown);
+                        alert('Training failed. Please try again.');
                     }
                 });
             });
