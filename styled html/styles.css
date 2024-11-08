@@ -1,0 +1,102 @@
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: linear-gradient(to bottom, #07075e, #000036);
+    background-attachment: fixed;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    width: 75%;
+    margin: 0 auto;
+}
+
+.montserrat-font {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.outfit-font {
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+.collapsible-section {
+    margin: 0px 0;
+}
+
+.collapse-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.collapse-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.arrow {
+    margin-right: 10px;
+    transition: transform 0.3s;
+}
+
+.collapse-btn.active .arrow {
+    transform: rotate(90deg);
+}
+
+.content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.button-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+}
+@media (min-width: 800px) {
+    .button-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+.action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
