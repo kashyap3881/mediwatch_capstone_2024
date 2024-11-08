@@ -15,8 +15,8 @@
 
 <body class="outfit-font">
     <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 100%; overflow-x: hidden;">
-        <div id="logo" style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-            <svg width="110" height="110" viewBox="0 0 100 100">
+        <div id="logo" style="display: flex; align-items: center; gap: clamp(10px, 2vw, 20px); flex-wrap: wrap;">
+            <svg width="clamp(80px, 10vw, 110px)" height="clamp(80px, 10vw, 110px)" viewBox="0 0 100 100">
                 <defs>
                     <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#3705b7"/>
@@ -44,7 +44,7 @@
                     fill="url(#blueGradient)"
                     filter="url(#shadow) url(#innerShadow)"/>
             </svg>
-            <h1 class="outfit-font">DiabetesGuard AI</h1>
+            <h1 class="outfit-font" style="font-size: clamp(2rem, 5vw, 3rem);">DiabetesGuard AI</h1>
         </div>
 
         <div id="about-section" class="collapsible-section">
@@ -92,7 +92,7 @@ If you have verified outcome data, you can also contribute to improving the mode
             </div>
         </div>
 
-        <div id="actions-section">
+        <div id="actions-section" style="margin: 0 10px 10px 10px;">
             <div class="button-container">
                 <button class="outfit-font action-btn" style="background: rgba(173, 216, 230, 0.3); border-radius: 10px">
                     Upload Data
