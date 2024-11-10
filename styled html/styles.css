@@ -20,6 +20,10 @@ body {
     margin: 0 auto;
 }
 
+p {
+    margin-top: 20px;
+}
+
 .montserrat-font {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;

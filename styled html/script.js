@@ -1,9 +1,11 @@
 // Initialize all collapse buttons
 document.querySelectorAll('.collapse-btn').forEach(button => {
     // Set initial state to open
-    button.classList.add('active');
+    // button.classList.add('active');
+    // content.style.maxHeight = content.scrollHeight + "px";
+
+    
     const content = button.nextElementSibling;
-    content.style.maxHeight = content.scrollHeight + "px";
 
     // Add click handler
     button.addEventListener('click', () => {
