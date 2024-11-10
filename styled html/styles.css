@@ -123,11 +123,12 @@ h1 {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     padding: 15px;
+    height: 100%;
     width: 100%;
     border: none;
     text-align: center;
     outline: none;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     cursor: pointer;
     transition: background-color 0.3s;
     border-radius: 10px;
@@ -139,6 +140,21 @@ h1 {
 }
 .action-btn:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+.custom-file-upload {
+    /* display: inline-block;
+    padding: 15px;
+    background-color: #0058B9;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    height: 100%; */
+
+}
+
+.custom-file-upload:hover {
+    background-color: #0077D9;
 }
 
 

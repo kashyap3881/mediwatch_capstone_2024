@@ -80,7 +80,7 @@ By leveraging predictive analytics, DiabetesGuard AI helps optimize patient care
             <div class="content">
                 <div style="display: flex; flex-direction: column; width: 100%;">
                     <p style="column-count: 1; word-wrap: break-word;">Using DiabetesGuard AI is straightforward and intuitive.<br><br>
-First, prepare your patient data in CSV format with the required fields including demographics, medical history, current medications, and recent lab results. Click the "Choose File" button to select and upload your CSV file.<br><br>
+First, prepare your patient data in CSV format with the required fields including demographics, medical history, current medications, and recent lab results. Click the "Upload CSV File" button to select and upload your CSV file.<br><br>
 Once uploaded, click "Make Prediction" to generate risk assessments for hospital readmission for each patient in your dataset. The model will analyze the data and provide detailed predictions that can help inform care decisions.<br><br>
 If you have verified outcome data, you can also contribute to improving the model by clicking "Train Model", which will use your uploaded dataset to further refine the model's predictive capabilities while maintaining patient privacy and data security.</p>
                 </div>
@@ -97,13 +97,13 @@ If you have verified outcome data, you can also contribute to improving the mode
 
         <div id="actions-section" style="margin: 0 10px 10px 10px;">
             <div class="button-container">
-                <!-- <button class="outfit-med action-btn" style="background: rgba(173, 216, 230, 0.3); border-radius: 10px">
-                    Upload Data
-                </button> -->
-                <input class="action-btn" type="file" class="form-control-file" id="csvFile" accept=".csv" style="background: rgb(0, 90, 129);"">   
-                <button class="outfit-med action-btn" style="background: rgb(0, 82, 0); ">
+                <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                <label for="csvFile" class="custom-file-upload outfit-med action-btn" style="background: rgb(2, 106, 161);" >
+                    Upload CSV File
+                </label>
+                <label class="outfit-med action-btn" style="background: rgb(0, 97, 59); ">
                     Make Prediction
-                </button>
+                </label>
             </div>
         </div>
 
