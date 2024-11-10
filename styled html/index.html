@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradient Background Page</title>
+    <title>DiabetesGuard AI</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +17,7 @@
 </head>
 
 <body class="outfit-thin">
-    <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 100%; overflow-x: hidden;">
+    <div class="container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 100%; overflow-x: hidden; ">
         <div id="logo" style="display: flex; align-items: center; gap: clamp(10px, 2vw, 20px); flex-wrap: wrap;">
             <svg width="clamp(80px, 10vw, 110px)" height="clamp(80px, 10vw, 110px)" viewBox="0 0 100 100">
                 <defs>
@@ -94,19 +97,29 @@ If you have verified outcome data, you can also contribute to improving the mode
 
         <div id="actions-section" style="margin: 0 10px 10px 10px;">
             <div class="button-container">
-                <button class="outfit-med action-btn" style="background: rgba(173, 216, 230, 0.3); border-radius: 10px">
+                <!-- <button class="outfit-med action-btn" style="background: rgba(173, 216, 230, 0.3); border-radius: 10px">
                     Upload Data
-                </button>
+                </button> -->
+                <input type="file" class="form-control-file" id="csvFile" accept=".csv">
                 <button class="outfit-med action-btn" style="background: rgba(34, 139, 34, 0.3); border-radius: 10px">
                     Make Prediction
                 </button>
-                <button class="outfit-med action-btn" style="background: rgba(255, 193, 7, 0.3); border-radius: 10px">
-                    Train Model
-                </button>
             </div>
         </div>
-    </div>
 
+        <div id="results-section" style="margin: 0 10px 10px 10px;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h3>CSV Preview</h3>
+                    <div id="csvPreviewTable"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
