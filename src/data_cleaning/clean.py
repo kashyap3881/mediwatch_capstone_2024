@@ -1,3 +1,22 @@
+"""
+Data cleaning module for the MediWatch project's medical dataset.
+
+This module provides functionality for cleaning and preprocessing medical data,
+particularly focused on hospital readmission data. It includes methods for
+feature dropping, data transformation, and categorical variable processing.
+
+The main class `clean` handles various preprocessing tasks such as:
+- Converting readmission data to binary classification
+- Transforming age groups to numerical values
+- Mapping admission IDs to meaningful categories
+- Handling missing values and data normalization
+
+Example:
+    cleaner = clean('path_to_data.csv')
+    cleaner.collapse_readmitted()
+    cleaner.collapse_age_groups()
+"""
+
 import os
 import math
 import pandas as pd
@@ -13,6 +32,19 @@ logger.setLevel(logging.INFO)
 
 
 class clean:
+    """
+    A class for cleaning and preprocessing medical data.
+
+    This class provides methods to clean and transform medical dataset features,
+    particularly focusing on readmission prediction preprocessing tasks.
+
+    Parameters:
+        filename (str): Path to the CSV file containing the medical data.
+
+    Attributes:
+        filename (str): Stored path to the data file.
+        df (pandas.DataFrame): DataFrame containing the medical data.
+    """
     def __init__(self, filename):
         self.filename = filename
         self.df = pd.read_csv(self.filename)
