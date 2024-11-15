@@ -10,6 +10,16 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 def decodeCSV(csvstring, fileName):
+    """
+    Decode a base64-encoded CSV string and save it to a file.
+
+    Args:
+        csvstring (str): Base64-encoded CSV data
+        fileName (str): Path where the decoded CSV should be saved
+
+    The function decodes the base64 string to UTF-8 CSV format and saves it.
+    Useful when receiving CSV data that has been encoded for transmission.
+    """
     csvdata = base64.b64decode(csvstring).decode('utf-8')
     with open(fileName, 'w') as f:
         f.write(csvdata)
@@ -17,6 +27,22 @@ def decodeCSV(csvstring, fileName):
     logger.info(f"CSV file saved as: {fileName}")
 
 def trigger_dag(trainer):
+    """
+    Trigger an Airflow DAG with a serialized trainer object.
+
+    Args:
+        trainer: DiabetesReadmissionTrainer instance to be used in the DAG
+
+    Process:
+    1. Serializes the trainer object using pickle
+    2. Encodes it in base64 for safe transmission
+    3. Sends it to Airflow via HTTP POST
+    4. Authenticates using configured credentials
+
+    Returns:
+        dict: Response from Airflow if successful (status 200)
+        None: If the DAG trigger fails
+    """
     # Serialize the trainer object
     serialized_trainer = pickle.dumps(trainer)
     # Encode the serialized object as base64
