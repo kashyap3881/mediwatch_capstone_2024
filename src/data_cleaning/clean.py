@@ -1,3 +1,22 @@
+"""
+Data cleaning module for the MediWatch project's medical dataset.
+
+This module provides functionality for cleaning and preprocessing medical data,
+particularly focused on hospital readmission data. It includes methods for
+feature dropping, data transformation, and categorical variable processing.
+
+The main class `clean` handles various preprocessing tasks such as:
+- Converting readmission data to binary classification
+- Transforming age groups to numerical values
+- Mapping admission IDs to meaningful categories
+- Handling missing values and data normalization
+
+Example:
+    cleaner = clean('path_to_data.csv')
+    cleaner.collapse_readmitted()
+    cleaner.collapse_age_groups()
+"""
+
 import os
 import math
 import pandas as pd
@@ -13,6 +32,20 @@ logger.setLevel(logging.INFO)
 
 
 class clean:
+    """
+    A class for cleaning and preprocessing medical data.
+
+    This class provides methods to clean and transform medical dataset features,
+    particularly focusing on readmission prediction preprocessing tasks.
+
+    Parameters:
+        filename (str): Path to the CSV file containing the medical data to be processed.
+
+    Attributes:
+        filename (str): Path to the source data file.
+        df (pandas.DataFrame): DataFrame containing the loaded and processed medical data.
+            This is the main data structure that gets transformed by the cleaning methods.
+    """
     def __init__(self, filename):
         self.filename = filename
         self.df = pd.read_csv(self.filename)
@@ -21,7 +54,13 @@ class clean:
     def drop_feature(self, feature_arr=[]):
         self.df = self.df.drop(feature_arr, axis=1)
     
+
     def collapse_readmitted(self):
+        """
+        Collapse readmission variable into a binary target variable, where:
+        - 0: Readmitted after 30 days
+        - 1: Readmitted in less than 30 days
+        """
         # New target variable mapping to collapse into a binary classification and plotting distribution
         self.df = self.df.replace({"NO":0,
                                    "<30":1,
@@ -42,6 +81,18 @@ class clean:
                                            "[0-10)":5})
     
     def collapse_admission_id(self):
+        """
+        Transform numerical admission type IDs into categorical string values.
+        
+        Transforms the numerical IDs in 'admission_type_id' column to descriptive strings:
+            1.0, 2.0 -> "Emergency"     : Different types of emergency admissions
+            3.0      -> "Elective"      : Planned/scheduled admissions
+            4.0      -> "New Born"      : Birth/newborn admissions
+            7.0      -> "Trauma Center" : Specialized trauma admissions
+            5.0, 6.0, 8.0 -> np.nan     : Unknown or invalid admission types
+        
+        The method modifies the 'admission_type_id' column in the DataFrame directly.
+        """
 
         mapped = {1.0:"Emergency",
                   2.0:"Emergency",
@@ -82,6 +133,18 @@ class clean:
         self.df.admission_source_id = self.df.admission_source_id.replace(mapped_adm)
     
     def label_encode(self):
+        """
+        Convert categorical string columns into numerical values using LabelEncoder.
+        
+        Process:
+        1. Separates categorical (string) and numerical columns
+        2. For each categorical column, converts unique string values into integers
+           Example: ["Emergency", "Elective", "New Born"] → [0, 1, 2]
+        3. Combines the encoded categorical columns with the original numerical columns
+        
+        Returns:
+            pandas.DataFrame: DataFrame with all categorical columns converted to numbers
+        """
         cat_data = self.df.select_dtypes('O')
         num_data = self.df.select_dtypes(np.number)
 
