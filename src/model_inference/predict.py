@@ -13,6 +13,34 @@ class DiabetesReadmissionPredictor:
         self.filename = filename
         self.model_dir = model_dir
         logger.info(f"Initializing Diabetes Readmission Predictor with file: {self.filename} and best model at {self.model_dir}")
+
+    def merge_or_save_new_data(self):
+        # Define the path to the new_data directory and new_data.csv file
+        new_data_dir = os.path.join(os.path.dirname(os.path.dirname(self.model_dir)), 'new_data')
+        new_data_path = os.path.join(new_data_dir, "new_data.csv")
+        
+        # Ensure the new_data directory exists
+        os.makedirs(new_data_dir, exist_ok=True)
+
+        # Load the new data from self.filename
+        new_data_df = pd.read_csv(self.filename)
+
+        if os.path.exists(new_data_path):
+            # If new_data.csv exists, load and concatenate with the new data
+            existing_data_df = pd.read_csv(new_data_path)
+            combined_df = pd.concat([existing_data_df, new_data_df], axis=0, ignore_index=True)
+            logger.info("Merged new data with existing new_data.csv")
+        else:
+            # If new_data.csv doesn't exist, use new_data_df directly
+            combined_df = new_data_df
+            logger.info("Saving new data as new_data.csv")
+        
+        # Remove exact duplicate rows
+        combined_df = combined_df.drop_duplicates()
+
+        # Save the combined data back to new_data.csv
+        combined_df.to_csv(new_data_path, index=False)
+        logger.info("Data merged, duplicates removed, and saved to new_data.csv")
     
     def prediction_diabetes_readmission(self):
         """
@@ -39,6 +67,9 @@ class DiabetesReadmissionPredictor:
         logger.info("Invoking cleaning module to clean new data ..........")
         cleanObj = clean(self.filename)
         clean_df = cleanObj.clean_data()
+
+        # Merge or save the cleaned data
+        self.merge_or_save_new_data()
 
         # This is non-scaled data so we need to apply scaler here before we do predictions
         
