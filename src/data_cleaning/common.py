@@ -30,19 +30,31 @@ def check_missing_values(data):
 
 
 # get list of only numeric features
-def get_numeric_features(data, forecast_column=None):
-    if forecast_column:
-        return(list(set(list(data._get_numeric_data().columns))- {forecast_column}))
-    return(list(set(list(data._get_numeric_data().columns))))
+# def get_numeric_features(data, forecast_column=None):
+#     if forecast_column:
+#         return(list(set(list(data._get_numeric_data().columns))- {forecast_column}))
+#     return(list(set(list(data._get_numeric_data().columns))))
 
 
 
-# get list of only categorical features
-def get_categorical_features(data, col_exclude=None):
-    cat_col = data.select_dtypes(include=['object', 'category', 'bool']).columns.tolist()
+# # get list of only categorical features
+# def get_categorical_features(data, col_exclude=None):
+#     cat_col = data.select_dtypes(include=['object', 'category', 'bool']).columns.tolist()
+#     if col_exclude:
+#         cat_col = [col for col in cat_col if col != col_exclude]
+#     return(cat_col)
+
+def get_numeric_features(data, col_exclude=None):
+    numeric_columns = data.select_dtypes(np.number).columns.tolist()
     if col_exclude:
-        cat_col = [col for col in cat_col if col != col_exclude]
-    return(cat_col)
+        numeric_columns = [col for col in numeric_columns if col not in col_exclude]
+    return numeric_columns
+
+def get_categorical_features(data, col_exclude=None):
+    categorical_columns = data.select_dtypes('O').columns.tolist()
+    if col_exclude:
+        categorical_columns = [col for col in categorical_columns if col not in col_exclude]
+    return categorical_columns
 
 
 #Checking the unique values of the columns

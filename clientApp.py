@@ -3,7 +3,8 @@ import os
 from flask_cors import CORS, cross_origin
 from src.lib.utils import decodeCSV
 from src.model_inference.predict import DiabetesReadmissionPredictor
-from src.model_training.train import DiabetesReadmissionTrainer
+# from src.model_training.train import DiabetesReadmissionTrainer
+# from src.lib.utils import trigger_dag
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -21,9 +22,9 @@ class ClientApp:
     def __init__(self):
         self.filename = "test_data.csv"
         self.predictor = DiabetesReadmissionPredictor(self.filename, os.path.join(os.getcwd(), "src/models/best_model"))
-        self.trainer = DiabetesReadmissionTrainer(os.path.join(os.getcwd(), "src/input_data/dataset_diabetes/diabetic_data.csv"), 
-                                                  self.filename, 
-                                                  os.path.join(os.getcwd(), "src/models"))
+        # self.trainer = DiabetesReadmissionTrainer(os.path.join(os.getcwd(), "src/input_data/dataset_diabetes/diabetic_data.csv"), 
+        #                                           self.filename, 
+        #                                           os.path.join(os.getcwd(), "src/models"))
 
 @app.route("/", methods=['GET'])
 @cross_origin()
@@ -45,23 +46,38 @@ def predictRoute():
     return jsonify(formatted_result)
 
 
-@app.route("/train", methods=['POST'])
-@cross_origin()
-def trainRoute():
-    csv_data = request.json['csv']
-    client_app = ClientApp()
-    decodeCSV(csv_data, client_app.filename)
-    result = client_app.trainer.train_and_evaluate_model()
-    # Ensure the result is in the correct format
-    # Format the result
-    formatted_result = {
-        "Hospital Readmission Training": {
-            "Best Model": result['best_model_name'],
-            "Train Accuracy": result['best_model_train_accuracy'],
-            "Test Accuracy": result['best_model_test_accuracy']
-        }
-    }
-    return jsonify(formatted_result)
+# @app.route("/train", methods=['POST'])
+# @cross_origin()
+# def trainRoute():
+#     csv_data = request.json['csv']
+#     client_app = ClientApp()
+#     decodeCSV(csv_data, client_app.filename)
+#     result = client_app.trainer.train_and_evaluate_model()
+#     # Ensure the result is in the correct format
+#     # Format the result
+#     formatted_result = {
+#         "Hospital Readmission Training": {
+#             "Best Model": result['best_model_name'],
+#             "Train Accuracy": result['best_model_train_accuracy'],
+#             "Test Accuracy": result['best_model_test_accuracy']
+#         }
+#     }
+#     return jsonify(formatted_result)
+
+# @app.route("/dag", methods=['POST'])
+# @cross_origin()
+# def dagRoute():
+#     csv_data = request.json['csv']
+#     client_app = ClientApp()
+#     decodeCSV(csv_data, client_app.filename)
+    
+#     # Trigger the DAG with the trainer object
+#     dag_result = trigger_dag(client_app.trainer)
+    
+#     if dag_result:
+#         return jsonify(dag_result), 200
+#     else:
+#         return jsonify({"error": "Failed to trigger DAG or retrieve results"}), 500
 
 
 #port = int(os.getenv("PORT"))

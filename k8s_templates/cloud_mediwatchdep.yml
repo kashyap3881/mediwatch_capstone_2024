@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mediwatch-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mediwatch
+  template:
+    metadata:
+      labels:
+        app: mediwatch
+    spec:
+      containers:
+      - name: mediwatch-container
+        image: 010440713126.dkr.ecr.us-east-1.amazonaws.com/mediwatch:latest
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 9003
+        env:
+        - name: PORT
+          value: "9003"  # Note: Environment variable values are strings
+      imagePullSecrets:
+      - name: my-ecr-secret
