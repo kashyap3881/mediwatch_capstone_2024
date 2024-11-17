@@ -1,18 +1,43 @@
 import os
 import sys
 import pandas as pd
-from src.model_inference.predict import DiabetesReadmissionPredictor
-import src.lib.dagconfig as cfg
-from src.data_cleaning.clean import clean
-from src.lib.utils import get_reference_data, get_report, compare_dataframe_features
-from src.lib.utils import get_test_suite, trigger_dag
+import requests
+from requests.auth import HTTPBasicAuth
+from continuous_training.airflow_local.src.model_inference.predict import DiabetesReadmissionPredictor
+from continuous_training.airflow_local.src.data_cleaning.clean import clean
+from continuous_training.airflow_local.src.lib.utils import get_reference_data, get_report, compare_dataframe_features
+from continuous_training.airflow_local.src.lib.utils import get_test_suite, trigger_dag
 from evidently.ui.workspace import Workspace
 from evidently import ColumnMapping
-from src.data_cleaning.common import get_numeric_features, get_categorical_features
+from continuous_training.airflow_local.src.data_cleaning.common import get_numeric_features, get_categorical_features
+import dagconfig as cfg
+
 import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+
+def trigger_dag(original_data_filename, new_data_filename, model_dir):
+
+    parameters = {
+        "conf": {
+            "original_data_filename": original_data_filename,
+            "new_data_filename": new_data_filename,
+            "model_dir": model_dir
+            # "bucket_name": cfg.BUCKET_NAME
+        }
+    }   
+
+    # Send an authenticated HTTP POST request to trigger the DAG
+    response = requests.post(cfg.AIRFLOW_API_URL, json=parameters, auth=HTTPBasicAuth(cfg.AIRFLOW_USERNAME, cfg.AIRFLOW_PASSWORD))
+
+    # Check the response to see if the DAG was triggered successfully
+    if response.status_code == 200:
+        logger.info("DAG has been triggered successfully.")
+    else:
+        logger.error(f"Failed to trigger the DAG. Status code: {response.status_code}")
+        logger.error(response.text)
 
 def create_column_mapping(data, target_column, prediction_column):
     numeric_features = get_numeric_features(data, col_exclude = [target_column, prediction_column])

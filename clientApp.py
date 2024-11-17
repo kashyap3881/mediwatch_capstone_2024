@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify, render_template
 import os
 from flask_cors import CORS, cross_origin
-from src.lib.utils import decodeCSV
-from src.model_inference.predict import DiabetesReadmissionPredictor
-# from src.model_training.train import DiabetesReadmissionTrainer
-# from src.lib.utils import trigger_dag
+from continuous_training.airflow_local.src.lib.utils import decodeCSV
+from continuous_training.airflow_local.src.model_inference.predict import DiabetesReadmissionPredictor
+# from continuous_training.airflow_local.src.model_training.train import DiabetesReadmissionTrainer
+# from continuous_training.airflow_local.src.lib.utils import trigger_dag
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -21,7 +21,7 @@ CORS(app)
 class ClientApp:
     def __init__(self):
         self.filename = "test_data.csv"
-        self.predictor = DiabetesReadmissionPredictor(self.filename, os.path.join(os.getcwd(), "src/models/best_model"))
+        self.predictor = DiabetesReadmissionPredictor(self.filename, os.path.join(os.getcwd(), "continuous_training/airflow_local/src/models/best_model"))
         # self.trainer = DiabetesReadmissionTrainer(os.path.join(os.getcwd(), "src/input_data/dataset_diabetes/diabetic_data.csv"), 
         #                                           self.filename, 
         #                                           os.path.join(os.getcwd(), "src/models"))
