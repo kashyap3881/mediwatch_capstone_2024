@@ -21,3 +21,11 @@ spec:
         env:
         - name: PORT
           value: "9003"  # Note: Environment variable values are strings
+        volumeMounts:
+        - name: new-data
+          mountPath: /app/continuous_training/airflow_local/src/new_data
+      volumes:
+      - name: new-data
+        hostPath:
+          path: /Users/kashyapkambhatla/readme_try/mediwatch_capstone_2024/continuous_training/airflow_local/src/new_data
+          type: Directory

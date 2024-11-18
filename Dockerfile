@@ -9,9 +9,10 @@ WORKDIR /app
 # Copy only the necessary files and folders
 COPY Procfile .
 COPY clientApp.py .
-COPY src/ src/
-COPY templates/ templates/
+COPY __init__.py .
 COPY requirements.txt .
+COPY continuous_training/ continuous_training/
+COPY templates/ templates/
 
 # Install dependencies
 RUN pip3 install -r requirements.txt

@@ -8,7 +8,7 @@ from evidently.ui.dashboards import PlotType
 from evidently.ui.dashboards import ReportFilter
 from evidently.ui.workspace import Workspace
 from evidently.renderers.html_widgets import WidgetSize
-import src.lib.dagconfig as cfg
+import dagconfig as cfg
 import shutil
 
 import logging
