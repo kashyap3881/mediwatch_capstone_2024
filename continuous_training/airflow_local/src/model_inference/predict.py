@@ -43,6 +43,23 @@ class DiabetesReadmissionPredictor:
         logger.info("Data merged, duplicates removed, and saved to new_data.csv")
     
     def prediction_diabetes_readmission(self):
+        """
+        Predict diabetes patient readmission using the trained model.
+
+        Process:
+        1. Loads and cleans the input data using the clean module
+        2. Loads the trained model and scaler
+        3. Scales the features using the saved scaler
+        4. Makes predictions using the model
+        5. Returns results with patient IDs and predictions
+
+        Returns:
+            list: A list containing a dictionary with predictions in the format:
+                [{'Hospital Readmission Prediction': [
+                    {'patient_id': id, 'readmitted': actual, 'predicted_readmitted': pred},
+                    ...
+                ]}]
+        """
         logger.info("Loading the original data ..........")
         original_df = pd.read_csv(self.filename)
         patient_id = original_df['patient_nbr']

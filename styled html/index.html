@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiabetesGuard AI</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+
+<body class="outfit-thin">
+    <div class="container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 100%; overflow-x: hidden; ">
+        <div id="logo" style="display: flex; align-items: center; gap: clamp(10px, 2vw, 20px); flex-wrap: wrap;">
+            <svg width="clamp(80px, 10vw, 110px)" height="clamp(80px, 10vw, 110px)" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#3705b7"/>
+                        <stop offset="100%" style="stop-color:#348de6"/>
+                    </linearGradient>
+                    <filter id="shadow">
+                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+                    </filter>
+                    <filter id="innerShadow">
+                        <feOffset dx="0" dy="0"/>
+                        <feGaussianBlur stdDeviation="2"/>
+                        <feComposite operator="out" in="SourceGraphic"/>
+                        <feComposite operator="in" in2="SourceGraphic"/>
+                        <feBlend mode="multiply" in2="SourceGraphic"/>
+                    </filter>
+                </defs>
+                <path d="M50 10
+                         A40 40 0 1 1 50 90
+                         A40 40 0 1 1 50 10
+                         Z
+                         M50 22
+                         A28 28 0 1 0 50 78
+                         A28 28 0 1 0 50 22
+                         Z"
+                    fill="url(#blueGradient)"
+                    filter="url(#shadow) url(#innerShadow)"/>
+            </svg>
+            <h1 class="outfit-med" style="font-size: clamp(2rem, 5vw, 3rem);">DiabetesGuard AI</h1>
+        </div>
+
+        <div id="about-section" class="collapsible-section">
+            <button class="collapse-btn outfit-med">
+                <span class="arrow">▶</span>
+                About the Project
+            </button>
+            <div class="content">
+                <div style="display: flex; flex-direction: column; width: 100%;">
+                    <p style="column-count: 1; word-wrap: break-word;">DiabetesGuard AI is an advanced machine learning model designed to predict hospital readmissions for patients with diabetes.<br><br>
+By analyzing a comprehensive set of patient data, including medical history, current health metrics, treatment adherence, and socioeconomic factors, DiabetesGuard AI generates personalized risk assessments for diabetic patients. This powerful tool enables healthcare providers to identify high-risk individuals who may require additional support or interventions to prevent unnecessary hospital readmissions.<br><br>
+By leveraging predictive analytics, DiabetesGuard AI helps optimize patient care, reduce healthcare costs, and improve overall outcomes for individuals managing diabetes. The model's continuous learning capabilities ensure it stays up-to-date with the latest clinical insights, making it an invaluable asset in the proactive management of diabetic patient care.</p>
+                </div>
+                <style>
+                    @media (min-width: 800px) {
+                        p {
+                            column-count: 2 !important;
+                            column-gap: 40px;
+                        }
+                    }
+                </style>
+            </div>
+        </div>
+
+        <div id="how-it-works-section" class="collapsible-section">
+            <button class="collapse-btn outfit-med">
+                <span class="arrow">▶</span>
+                How it Works
+            </button>
+            <div class="content">
+                <div style="display: flex; flex-direction: column; width: 100%;">
+                    <p style="column-count: 1; word-wrap: break-word;">Using DiabetesGuard AI is straightforward and intuitive.<br><br>
+First, prepare your patient data in CSV format with the required fields including demographics, medical history, current medications, and recent lab results. Click the "Upload CSV File" button to select and upload your CSV file.<br><br>
+Once uploaded, click "Make Prediction" to generate risk assessments for hospital readmission for each patient in your dataset. The model will analyze the data and provide detailed predictions that can help inform care decisions.<br><br>
+If you have verified outcome data, you can also contribute to improving the model by clicking "Train Model", which will use your uploaded dataset to further refine the model's predictive capabilities while maintaining patient privacy and data security.</p>
+                </div>
+                <style>
+                    @media (min-width: 800px) {
+                        p {
+                            column-count: 2 !important;
+                            column-gap: 40px;
+                        }
+                    }
+                </style>
+            </div>
+        </div>
+
+        <div id="actions-section" style="margin: 0 10px 10px 10px;">
+            <div class="button-container">
+                <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                <label for="csvFile" class="custom-file-upload outfit-med action-btn" style="background: rgb(2, 106, 161);" >
+                    Upload CSV File
+                </label>
+                <label class="outfit-med action-btn" style="background: rgb(0, 97, 59); ">
+                    Make Prediction
+                </label>
+            </div>
+        </div>
+
+        <div id="results-section" style="margin: 0 10px 10px 10px;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h3>CSV Preview</h3>
+                    <div id="csvPreviewTable"></div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h3>Prediction Results</h3>
+                <div id="chartContainer">
+                    <canvas id="predictionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

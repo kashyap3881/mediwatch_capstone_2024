@@ -96,7 +96,7 @@ spec:
 ```
 
 ```
-(base) Kashyaps-MBP:~ kashyapkambhatla$ kubectl apply -f mediwatchdep.yaml -n mediwatch 
+(base) Kashyaps-MBP:~ kashyapkambhatla$ kubectl apply -f mediwatchdep.yml -n mediwatch 
 deployment.apps/mediwatch-deployment created
 
 (base) Kashyaps-MBP:~ kashyapkambhatla$ kubectl get pods -n mediwatch 

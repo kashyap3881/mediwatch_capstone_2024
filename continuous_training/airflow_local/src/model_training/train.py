@@ -34,7 +34,33 @@ class DiabetesReadmissionTrainer:
         ))
     
     def train_and_evaluate_model(self):
+        """
+        Train and evaluate models for diabetes readmission prediction.
 
+        Process:
+        1. Data Preparation:
+           - Cleans data using the clean module
+           - Optionally combines original and new data
+           - Splits into train (80%) and test (20%) sets
+           - Standardizes features
+
+        2. Model Training:
+           Trains multiple models:
+           - Logistic Regression: Simple linear classifier
+           - Random Forest: Ensemble of decision trees
+
+        3. Model Evaluation:
+           - Calculates training and test accuracy
+           - Creates confusion matrices
+           - Selects best performing model
+
+        4. Model Storage:
+           - Saves best model and its scaler
+           - Cleans up intermediate files
+
+        Returns:
+            dict: Dictionary containing model performance metrics
+        """
         logger.info("Invoking cleaning module to clean original data ..........")
         cleanObj_orig = clean(self.original_data_filename)
         original_train_df = cleanObj_orig.clean_data()
