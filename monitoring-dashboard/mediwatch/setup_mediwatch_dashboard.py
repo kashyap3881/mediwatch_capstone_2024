@@ -18,6 +18,7 @@ logger.setLevel(logging.INFO)
 
 # Define a function to create a project within a workspace
 def create_project(ws):
+    print(f"create_project: Creating project {cfg.PROJECT_NAME}")
     project = ws.create_project(cfg.PROJECT_NAME)
 
     # Add a counter panel to the project's dashboard
@@ -87,14 +88,14 @@ def create_project(ws):
 def setup_workspace():
     # Check if the workspace directory already exists, and if so, delete it
     if os.path.exists(cfg.WORKSACE_PATH):
-        logger.info("Workspace already exists... Deleting existing workspace")
+        print("Workspace already exists... Deleting existing workspace")
         shutil.rmtree(cfg.WORKSACE_PATH)
     
     logger.info("Creating Workspace.... ")
 
     # Create a workspace and project
     ws = Workspace.create(cfg.WORKSACE_PATH)
-    logger.info("Creating Project....")
+    print("Creating Project............")
     project = create_project(ws)
 
 if __name__ == '__main__':

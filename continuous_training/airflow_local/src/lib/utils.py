@@ -137,7 +137,8 @@ def get_test_suite(reference_data, new_data, column_mapping):
         tests = [
                  TestAccuracyScore(gte=0.5),
                  TestPrecisionByClass(gte=0.5, label=1),
-                 TestColumnDrift(column_name='time_in_hospital ', stattest='psi', stattest_threshold=0.1),
+                 #TestColumnDrift(column_name='time_in_hospital ', stattest='psi', stattest_threshold=0.1),
+                 TestColumnDrift(column_name='time_in_hospital', stattest='psi', stattest_threshold=0.1),
                  TestColumnDrift(column_name='num_medications', stattest='ks', stattest_threshold=0.05),
                  TestColumnDrift(column_name='number_diagnoses', stattest='ks', stattest_threshold=0.05)
                 ],

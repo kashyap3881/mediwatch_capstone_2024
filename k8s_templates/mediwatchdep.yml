@@ -13,19 +13,21 @@ spec:
         app: mediwatch
     spec:
       containers:
-      - name: mediwatch-container
-        image: mediwatch:v1
-        imagePullPolicy: IfNotPresent 
-        ports:
-        - containerPort: 9003
-        env:
-        - name: PORT
-          value: "9003"  # Note: Environment variable values are strings
-        volumeMounts:
-        - name: new-data
-          mountPath: /app/continuous_training/airflow_local/src/new_data
+        - name: mediwatch-container
+          image: 463856955126.dkr.ecr.us-east-1.amazonaws.com/mediwatch:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9003
+          env:
+            - name: PORT
+              value: "9003" # Note: Environment variable values are strings
+          volumeMounts:
+            - name: new-data
+              mountPath: /app/continuous_training/airflow_local/src/new_data
       volumes:
-      - name: new-data
-        hostPath:
-          path: /Users/kashyapkambhatla/readme_try/mediwatch_capstone_2024/continuous_training/airflow_local/src/new_data
-          type: Directory
+        - name: new-data
+          hostPath:
+            path: /home/ubuntu/mediwatch_capstone_2024/continuous_training/airflow_local/src/new_data
+            type: Directory
+      imagePullSecrets:
+        - name: my-ecr-secret

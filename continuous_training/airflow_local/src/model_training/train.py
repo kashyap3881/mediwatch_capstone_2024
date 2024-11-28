@@ -137,38 +137,38 @@ class DiabetesReadmissionTrainer:
             cm
             ))
 
-        # # Lazy Classifier Models
-        # X = train_df.drop('readmitted', axis=1)
-        # y = train_df['readmitted']
-        # X_sampled, _, y_sampled, _ = train_test_split(X, y, train_size=20000, stratify=y, random_state=42)
-        # X_train, X_test, y_train, y_test = train_test_split(X_sampled, y_sampled, test_size=0.2, stratify=y_sampled, random_state=42)
+        # Lazy Classifier Models
+        X = train_df.drop('readmitted', axis=1)
+        y = train_df['readmitted']
+        X_sampled, _, y_sampled, _ = train_test_split(X, y, train_size=20000, stratify=y, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X_sampled, y_sampled, test_size=0.2, stratify=y_sampled, random_state=42)
 
-        # # Standardizing the data
-        # logger.info("Standardizing the data")
-        # SC = StandardScaler()
-        # X_train_scaled = pd.DataFrame(SC.fit_transform(X_train),columns=X_train.columns)
-        # X_test_scaled = pd.DataFrame(SC.transform(X_test),columns=X_test.columns)
-        # joblib.dump(SC, os.path.join(scaler_dir, 'lazy_standard_scaler.joblib'), compress=('gzip', 3))
+        # Standardizing the data
+        logger.info("Standardizing the data")
+        SC = StandardScaler()
+        X_train_scaled = pd.DataFrame(SC.fit_transform(X_train),columns=X_train.columns)
+        X_test_scaled = pd.DataFrame(SC.transform(X_test),columns=X_test.columns)
+        joblib.dump(SC, os.path.join(scaler_dir, 'lazy_standard_scaler.joblib'), compress=('gzip', 3))
 
-        # lazy_classifier_dir = os.path.join(self.model_dir, 'lazy_classifier')
-        # if not os.path.exists(lazy_classifier_dir):
-        #     os.makedirs(lazy_classifier_dir)
-        # logger.info("Training Lazy Classifier Models")
-        # clf = LazyClassifier(verbose=0,ignore_warnings=True, custom_metric=None)
-        # models, predictions = clf.fit(X_train_scaled, X_test_scaled, y_train, y_test)
-        # model_dict = clf.provide_models(X_train_scaled, X_test_scaled, y_train, y_test)
+        lazy_classifier_dir = os.path.join(self.model_dir, 'lazy_classifier')
+        if not os.path.exists(lazy_classifier_dir):
+            os.makedirs(lazy_classifier_dir)
+        logger.info("Training Lazy Classifier Models")
+        clf = LazyClassifier(verbose=0,ignore_warnings=True, custom_metric=None)
+        models, predictions = clf.fit(X_train_scaled, X_test_scaled, y_train, y_test)
+        model_dict = clf.provide_models(X_train_scaled, X_test_scaled, y_train, y_test)
 
-        # # Select top 3 models based on test accuracy
-        # top_3_models = models.head(3)
-        # logger.info("Top 3 models:\n{}".format(top_3_models))
+        # Select top 3 models based on test accuracy
+        top_3_models = models.head(3)
+        logger.info("Top 3 models:\n{}".format(top_3_models))
 
-        # # Store top 3 models and their accuracies
-        # for model_name in top_3_models.index:
-        #     model = model_dict[model_name]
-        #     joblib.dump(model, os.path.join(lazy_classifier_dir, f'{model_name}.joblib'), compress=('gzip', 3))
-        #     train_algo_accuracy[model_name] = model.score(X_train_scaled, y_train)
-        #     test_algo_accuracy[model_name] = models.loc[model_name, 'Accuracy']
-        #     logger.info(f"{model_name} Train Accuracy: {train_algo_accuracy[model_name]} Test Accuracy: {test_algo_accuracy[model_name]}")
+        # Store top 3 models and their accuracies
+        for model_name in top_3_models.index:
+            model = model_dict[model_name]
+            joblib.dump(model, os.path.join(lazy_classifier_dir, f'{model_name}.joblib'), compress=('gzip', 3))
+            train_algo_accuracy[model_name] = model.score(X_train_scaled, y_train)
+            test_algo_accuracy[model_name] = models.loc[model_name, 'Accuracy']
+            logger.info(f"{model_name} Train Accuracy: {train_algo_accuracy[model_name]} Test Accuracy: {test_algo_accuracy[model_name]}")
 
         # Choose the best model
         best_model_name = max(test_algo_accuracy, key=test_algo_accuracy.get)
@@ -191,10 +191,10 @@ class DiabetesReadmissionTrainer:
             best_model = RF
             source_path = os.path.join(random_forest_dir, 'random_forest.joblib')
             scaler_path = os.path.join(scaler_dir, 'standard_scaler.joblib')
-        # else:
-        #     best_model = model_dict[best_model_name]
-        #     source_path = os.path.join(lazy_classifier_dir, f'{best_model_name}.joblib')
-        #     scaler_path = os.path.join(scaler_dir, 'lazy_standard_scaler.joblib')
+        else:
+            best_model = model_dict[best_model_name]
+            source_path = os.path.join(lazy_classifier_dir, f'{best_model_name}.joblib')
+            scaler_path = os.path.join(scaler_dir, 'lazy_standard_scaler.joblib')
 
         # Move the best model to the best_model directory
         shutil.copy(source_path, os.path.join(best_model_dir, 'best_model.joblib'))
@@ -203,8 +203,8 @@ class DiabetesReadmissionTrainer:
         shutil.copy(scaler_path, os.path.join(best_model_dir, 'best_scaler.joblib'))
 
         # Clean up directories
-        # directories_to_remove = ['logistic_regression', 'random_forest', 'lazy_classifier', 'scaler']
-        directories_to_remove = ['logistic_regression', 'random_forest', 'scaler']
+        directories_to_remove = ['logistic_regression', 'random_forest', 'lazy_classifier', 'scaler']
+        # directories_to_remove = ['logistic_regression', 'random_forest', 'scaler']
         for dir_name in directories_to_remove:
             dir_path = os.path.join(self.model_dir, dir_name)
             if os.path.exists(dir_path):
