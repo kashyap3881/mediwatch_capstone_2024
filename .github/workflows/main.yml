@@ -32,6 +32,7 @@ on:
       - main
     paths-ignore:
       - 'README.md'
+      - 'MediWatch.pdf'
 
 permissions:
   id-token: write
